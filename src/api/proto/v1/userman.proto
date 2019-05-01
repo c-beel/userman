@@ -1,0 +1,62 @@
+syntax = "proto3";
+package v1;
+
+message User {
+    // Unique integer assigned to each user
+    int64 id = 1;
+
+    // Unique string for each user
+    string username = 2;
+
+    // Email address
+    string email = 3;
+
+    // First name
+    string firstName = 4;
+
+    // Last Name
+    string lastName = 5;
+}
+
+message Group {
+    // Unique integer assigned to each group
+    int64 id = 1;
+
+    // The name of the group
+    string name = 2;
+}
+
+message Membership {
+    // Unique integer assigned to each membership
+    int64 id = 1;
+
+    // ID of user
+    int64 uid = 2;
+
+    // ID of group
+    int64 gid = 3;
+}
+
+// Request data to create new user
+message CreateUserRequest {
+    // API versioning
+    string api = 1;
+
+    // User entity to add
+    User user = 2;
+}
+
+// Response that contains data for created todo task
+message CreateUserResponse {
+    // API versioning
+    string api = 1;
+
+    // ID of created User
+    int64 id = 2;
+}
+
+// Service to manage list of users and groups
+service UsermanService {
+    // Create new user
+    rpc Create (CreateUserRequest) returns (CreateUserResponse);
+}
