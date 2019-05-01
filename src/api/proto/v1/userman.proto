@@ -46,7 +46,7 @@ message CreateUserRequest {
     User user = 2;
 }
 
-// Response that contains data for created todo task
+// Response that contains data for created user
 message CreateUserResponse {
     // API versioning
     string api = 1;
