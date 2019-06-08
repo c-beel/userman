@@ -37,26 +37,53 @@ message Membership {
     int64 gid = 3;
 }
 
-// Request data to create new user
-message CreateUserRequest {
+// Request data to update a user
+message UpdateUserRequest {
     // API versioning
     string api = 1;
 
     // User entity to add
     User user = 2;
+
+    // Google id token
+    string id_token = 3;
 }
 
-// Response that contains data for created user
-message CreateUserResponse {
+// Response that contains data for updated user
+message UpdateUserResponse {
     // API versioning
     string api = 1;
 
-    // ID of created User
+    // ID of updated user
     int64 id = 2;
+}
+
+// Request data to create new user
+message GetUserByIdRequest {
+    // API versioning
+    string api = 1;
+
+    // Id of requested user
+    int64 id = 2;
+
+    // Google id token
+    string id_token = 3;
+}
+
+// Response that contains data for created user
+message GetUserByIdResponse {
+    // API versioning
+    string api = 1;
+
+    // Requested user
+    User user = 2;
 }
 
 // Service to manage list of users and groups
 service UsermanService {
-    // Create new user
-    rpc Create (CreateUserRequest) returns (CreateUserResponse);
+    // Update (or create) a user
+    rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+
+    // Get a user by id
+    rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
 }
