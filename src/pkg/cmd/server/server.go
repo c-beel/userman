@@ -25,9 +25,11 @@ func RunServer() error {
 	}
 
 	v1API, err := v1.NewUsermanServer(cfg)
-	v1API.AutoMigrate()
 	if err != nil {
 		return fmt.Errorf("failed to start service : %v", err)
+	}
+	if err := v1API.AutoMigrate(); err != nil {
+		return fmt.Errorf("failed to auto migrate : %v", err)
 	}
 
 	return grpc.RunServer(ctx, v1API, cfg.GRPCPort)

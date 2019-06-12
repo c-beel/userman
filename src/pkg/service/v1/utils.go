@@ -23,9 +23,17 @@ func NewUsermanServer(config configman.Config) (*UsermanServer, error) {
 	}, nil
 }
 
-func (server *UsermanServer) AutoMigrate() {
-	server.DB.AutoMigrate(&models.User{})
-	server.DB.AutoMigrate(&models.Group{})
+func (server *UsermanServer) AutoMigrate() (err error) {
+	if err = server.DB.AutoMigrate(&models.User{}).Error; err != nil {
+		return err
+	}
+	if err = server.DB.AutoMigrate(&models.Group{}).Error; err != nil {
+		return err
+	}
+	if err = server.DB.AutoMigrate(&models.Membership{}).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (server *UsermanServer) checkAPI(api string) error {
