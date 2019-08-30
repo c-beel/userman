@@ -6,22 +6,25 @@ import (
 	"github.com/c-beel/userman/src/pkg/service/v1"
 	"github.com/c-beel/userman/src/pkg/protocol/grpc"
 	"github.com/c-beel/userman/src/configman"
-	"os"
+	"flag"
+	"log"
 )
 
 // RunServer runs gRPC server and HTTP gateway
 func RunServer() error {
 	ctx := context.Background()
 
+	configFileAddress := flag.String("conf", "config.yaml", "The path to the service config file")
+	flag.Parse()
+
 	// get configuration
-	cfg := configman.Config{
-		GRPCPort:          os.Getenv("GRPCPort"),
-		GoogleOAuthAPIKey: os.Getenv("GoogleOAuthAPIKey"),
-		DBAddress:         os.Getenv("DBAddress"),
+	cfg, err := configman.ImportConfigFromFile(*configFileAddress)
+	if err != nil {
+		log.Fatalf("Failed to parse config file with error %v", err)
 	}
 
-	if len(cfg.GRPCPort) == 0 {
-		return fmt.Errorf("invalid TCP port for gRPC server: '%s'", cfg.GRPCPort)
+	if len(cfg.ListenPort) == 0 {
+		return fmt.Errorf("invalid TCP port for gRPC server: '%s'", cfg.ListenPort)
 	}
 
 	v1API, err := v1.NewUsermanServer(cfg)
@@ -32,5 +35,5 @@ func RunServer() error {
 		return fmt.Errorf("failed to auto migrate : %v", err)
 	}
 
-	return grpc.RunServer(ctx, v1API, cfg.GRPCPort)
+	return grpc.RunServer(ctx, v1API, cfg.ListenPort)
 }

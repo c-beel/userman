@@ -1,7 +1,25 @@
 package configman
 
-type Config struct {
-	DBAddress         string
-	GoogleOAuthAPIKey string
-	GRPCPort              string
+import (
+	"io/ioutil"
+	"gopkg.in/yaml.v2"
+)
+
+type MainConfig struct {
+	DBConfig          DatabaseConfig `yaml:"database"`
+	GoogleOAuthAPIKey string         `yaml:"google-oauth-api-key"`
+	ListenPort        string         `yaml:"port"`
+}
+
+func ImportConfigFromFile(fileAddress string) (*MainConfig, error) {
+	content, err := ioutil.ReadFile(fileAddress)
+	if err != nil {
+		return nil, err
+	}
+	var config MainConfig
+	err = yaml.Unmarshal(content, &config)
+	if err != nil {
+		return nil, err
+	}
+	return &config, nil
 }
