@@ -23,10 +23,6 @@ func RunServer() error {
 		log.Fatalf("Failed to parse config file with error %v", err)
 	}
 
-	if len(cfg.ListenPort) == 0 {
-		return fmt.Errorf("invalid TCP port for gRPC server: '%s'", cfg.ListenPort)
-	}
-
 	v1API, err := v1.NewUsermanServer(cfg)
 	if err != nil {
 		return fmt.Errorf("failed to start service : %v", err)

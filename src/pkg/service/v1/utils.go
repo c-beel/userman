@@ -13,7 +13,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-func NewUsermanServer(cfg configman.MainConfig) (*UsermanServer, error) {
+func NewUsermanServer(cfg *configman.MainConfig) (*UsermanServer, error) {
 	dbUri := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s",
 		cfg.DBConfig.Address, cfg.DBConfig.Port, cfg.DBConfig.Username, cfg.DBConfig.Database, cfg.DBConfig.Password)
 	db, err := gorm.Open(cfg.DBConfig.Type, dbUri)
