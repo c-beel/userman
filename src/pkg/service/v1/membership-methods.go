@@ -75,7 +75,23 @@ func (server UsermanServer) SetUserGroups(ctx context.Context, req *v1.SetUserGr
 }
 
 func (server UsermanServer) GetUserGroupsList(ctx context.Context, req *v1.GetUserGroupsListRequest) (*v1.GetUserGroupsListResponse, error) {
-	return nil, nil
+	var user models.User
+	if err := server.DB.First(&user, req.Uid).Error; err != nil {
+		return nil, status.Errorf(codes.NotFound, "failed to get user(%d) with error %v", req.Uid, err)
+	}
+	var memberships []models.Membership
+	if err := server.DB.Where(&models.Membership{UID: user.ID}).Find(&memberships).Error; err != nil {
+		return nil, status.Errorf(codes.NotFound, "failed to get memberships with error %v", req.Uid, err)
+	}
+	groups := make([]models.Group, len(memberships))
+	for index, membership := range memberships {
+		groups[index] = membership.Group
+	}
+	var resGroups []*v1.Group
+	groupListModelsToGrpc(&groups, &resGroups)
+	return &v1.GetUserGroupsListResponse{
+		Groups: resGroups,
+	}, nil
 }
 
 func (server UsermanServer) IsMemberOf(ctx context.Context, req *v1.IsMemberOfRequest) (*v1.IsMemberOfResponse, error) {
@@ -83,7 +99,6 @@ func (server UsermanServer) IsMemberOf(ctx context.Context, req *v1.IsMemberOfRe
 	if err := server.DB.First(&user, req.Uid).Error; err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to get user with this id(%d) with error %v", req.Uid, err)
 	}
-	server.DB.Where(&models.Membership{UID: user.ID}).Delete(&models.Membership{})
 	var group models.Group
 	if err := server.DB.Where(&models.Group{Name: req.Group.Name}).First(&group).Error; err != nil {
 		return nil, status.Errorf(codes.Unknown, "failed to get group with name(%s) with error %v", req.Group.Name, err)
