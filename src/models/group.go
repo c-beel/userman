@@ -6,5 +6,5 @@ import (
 
 type Group struct {
 	gorm.Model
-	Name string
+	Name string `gorm:"unique"`
 }
