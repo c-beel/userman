@@ -1,10 +1,10 @@
 package v1
 
 import (
-	"github.com/c-beel/userman/src/pkg/api/v1"
+	"../../api/v1"
 	"google.golang.org/grpc/codes"
 	"context"
-	"github.com/c-beel/userman/src/models"
+	"../../../models"
 	"google.golang.org/grpc/status"
 )
 

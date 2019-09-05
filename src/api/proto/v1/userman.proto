@@ -83,7 +83,7 @@ message DeleteGroupResponse {
 
 message AddUserToGroupRequest {
     int64 uid = 1;
-    string groupName = 2;
+    repeated Group groups = 2;
 }
 
 message AddUserToGroupResponse {
@@ -91,7 +91,7 @@ message AddUserToGroupResponse {
 
 message RemoveUserFromGroupRequest {
     int64 uid = 1;
-    string groupName = 2;
+    repeated Group groups = 2;
 }
 
 message RemoveUserFromGroupResponse {
@@ -99,7 +99,7 @@ message RemoveUserFromGroupResponse {
 
 message SetUserGroupsRequest {
     int64 uid = 1;
-    repeated string groupNames = 2;
+    repeated Group groups = 2;
 }
 
 message SetUserGroupsResponse {
@@ -115,7 +115,7 @@ message GetUserGroupsListResponse {
 
 message IsMemberOfRequest {
     int64 uid = 1;
-    string groupName = 2;
+    Group group = 2;
 }
 
 message IsMemberOfResponse {
