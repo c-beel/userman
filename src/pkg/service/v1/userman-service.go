@@ -22,7 +22,7 @@ type UsermanServer struct {
 }
 
 // Create new User
-func (server *UsermanServer) UpdateUser(ctx context.Context, req *v1.UpdateUserRequest) (*v1.UpdateUserResponse, error) {
+func (server *UsermanServer) UpdateUserOld(ctx context.Context, req *v1.UpdateUserRequest) (*v1.UpdateUserResponse, error) {
 	// check if the API version requested by client is supported by server
 	var err error
 	if err = server.checkAPI(req.Api); err != nil {
