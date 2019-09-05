@@ -1,4 +1,4 @@
-port: 8000
+port: "8000"
 google-oauth-api-key: "google-oauth-api-key"
 database:
   type: "postgres"

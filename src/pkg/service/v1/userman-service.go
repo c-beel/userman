@@ -2,13 +2,7 @@ package v1
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/c-beel/userman/src/pkg/api/v1"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-	"context"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/c-beel/userman/src/models"
-	"fmt"
 )
 
 const (
@@ -21,6 +15,7 @@ type UsermanServer struct {
 	GoogleOAuthAPIKey string
 }
 
+/*
 // Create new User
 func (server *UsermanServer) UpdateUserOld(ctx context.Context, req *v1.UpdateUserRequest) (*v1.UpdateUserResponse, error) {
 	// check if the API version requested by client is supported by server
@@ -88,3 +83,4 @@ func (server *UsermanServer) GetUserById(ctx context.Context, req *v1.GetUserByI
 		User: &user.User,
 	}, nil
 }
+*/

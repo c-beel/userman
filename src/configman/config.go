@@ -3,6 +3,7 @@ package configman
 import (
 	"io/ioutil"
 	"gopkg.in/yaml.v2"
+	"fmt"
 )
 
 type MainConfig struct {
@@ -18,6 +19,7 @@ func ImportConfigFromFile(fileAddress string) (*MainConfig, error) {
 	}
 	var config MainConfig
 	err = yaml.Unmarshal(content, &config)
+	fmt.Println(config.ListenPort)
 	if err != nil {
 		return nil, err
 	}

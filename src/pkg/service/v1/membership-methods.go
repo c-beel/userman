@@ -1,14 +1,14 @@
 package v1
 
 import (
-	"../../api/v1"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"../../../models"
 	"context"
+	"github.com/c-beel/userman/src/models"
+	"github.com/c-beel/userman/src/pkg/api/v1"
 )
 
-func (server *UsermanServer) AddUserToGroup(ctx context.Context, req *v1.AddUserToGroupRequest) (*v1.AddUserToGroupResponse, error) {
+func (server UsermanServer) AddUserToGroup(ctx context.Context, req *v1.AddUserToGroupRequest) (*v1.AddUserToGroupResponse, error) {
 	var user models.User
 	if err := server.DB.First(&user, req.Uid).Error; err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to get user with this id(%d) with error %v", req.Uid, err)
@@ -29,7 +29,7 @@ func (server *UsermanServer) AddUserToGroup(ctx context.Context, req *v1.AddUser
 	return &v1.AddUserToGroupResponse{}, nil
 }
 
-func (server *UsermanServer) RemoveUserFromGroup(ctx context.Context, req *v1.RemoveUserFromGroupRequest) (*v1.RemoveUserFromGroupResponse, error) {
+func (server UsermanServer) RemoveUserFromGroup(ctx context.Context, req *v1.RemoveUserFromGroupRequest) (*v1.RemoveUserFromGroupResponse, error) {
 	var user models.User
 	if err := server.DB.First(&user, req.Uid).Error; err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to get user with this id(%d) with error %v", req.Uid, err)
@@ -50,7 +50,7 @@ func (server *UsermanServer) RemoveUserFromGroup(ctx context.Context, req *v1.Re
 	return &v1.RemoveUserFromGroupResponse{}, nil
 }
 
-func (server *UsermanServer) SetUserGroups(ctx context.Context, req *v1.SetUserGroupsRequest) (*v1.SetUserGroupsResponse, error) {
+func (server UsermanServer) SetUserGroups(ctx context.Context, req *v1.SetUserGroupsRequest) (*v1.SetUserGroupsResponse, error) {
 	var user models.User
 	if err := server.DB.First(&user, req.Uid).Error; err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to get user with this id(%d) with error %v", req.Uid, err)
@@ -74,7 +74,11 @@ func (server *UsermanServer) SetUserGroups(ctx context.Context, req *v1.SetUserG
 	return &v1.SetUserGroupsResponse{}, nil
 }
 
-func (server *UsermanServer) IsMemberOf(ctx context.Context, req *v1.IsMemberOfRequest) (*v1.IsMemberOfResponse, error) {
+func (server UsermanServer) GetUserGroupsList(ctx context.Context, req *v1.GetUserGroupsListRequest) (*v1.GetUserGroupsListResponse, error) {
+	return nil, nil
+}
+
+func (server UsermanServer) IsMemberOf(ctx context.Context, req *v1.IsMemberOfRequest) (*v1.IsMemberOfResponse, error) {
 	var user models.User
 	if err := server.DB.First(&user, req.Uid).Error; err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to get user with this id(%d) with error %v", req.Uid, err)

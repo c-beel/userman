@@ -1,8 +1,8 @@
 package v1
 
 import (
-	"../../api/v1"
-	"../../../models"
+	"github.com/c-beel/userman/src/pkg/api/v1"
+	"github.com/c-beel/userman/src/models"
 )
 
 func userGrpcToModels(grpcUser *v1.User, modelUser *models.User, includeId bool) {

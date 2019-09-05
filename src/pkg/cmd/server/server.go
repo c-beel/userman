@@ -30,6 +30,6 @@ func RunServer() error {
 	if err := v1API.AutoMigrate(); err != nil {
 		return fmt.Errorf("failed to auto migrate : %v", err)
 	}
-
-	return grpc.RunServer(ctx, v1API, cfg.ListenPort)
+	fmt.Println("salaaaaam :D")
+	return grpc.RunServer(ctx, *v1API, cfg.ListenPort)
 }

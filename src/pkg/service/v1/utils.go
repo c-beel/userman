@@ -5,8 +5,6 @@ import (
 	"context"
 	"google.golang.org/api/oauth2/v2"
 	"github.com/jinzhu/gorm"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"github.com/c-beel/userman/src/models"
 	"fmt"
 	"github.com/c-beel/userman/src/configman"
@@ -16,6 +14,7 @@ import (
 func NewUsermanServer(cfg *configman.MainConfig) (*UsermanServer, error) {
 	dbUri := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s",
 		cfg.DBConfig.Address, cfg.DBConfig.Port, cfg.DBConfig.Username, cfg.DBConfig.Database, cfg.DBConfig.Password)
+	fmt.Println(cfg.DBConfig.Port)
 	db, err := gorm.Open(cfg.DBConfig.Type, dbUri)
 	if err != nil {
 		return nil, err
@@ -35,17 +34,6 @@ func (server *UsermanServer) AutoMigrate() (err error) {
 	}
 	if err = server.DB.AutoMigrate(&models.Membership{}).Error; err != nil {
 		return err
-	}
-	return nil
-}
-
-func (server *UsermanServer) checkAPI(api string) error {
-	// API version is "" means use current version of the service
-	if len(api) > 0 {
-		if apiVersion != api {
-			return status.Errorf(codes.Unimplemented,
-				"unsupported API version: service implements API version '%s', but asked for '%s'", apiVersion, api)
-		}
 	}
 	return nil
 }

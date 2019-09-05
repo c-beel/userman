@@ -1,14 +1,14 @@
 package v1
 
 import (
-	"../../api/v1"
 	"google.golang.org/grpc/codes"
 	"context"
-	"../../../models"
 	"google.golang.org/grpc/status"
+	"github.com/c-beel/userman/src/pkg/api/v1"
+	"github.com/c-beel/userman/src/models"
 )
 
-func (server *UsermanServer) CreateUser(ctx context.Context, req *v1.CreateUserRequest) (*v1.CreateUserResponse, error) {
+func (server UsermanServer) CreateUser(ctx context.Context, req *v1.CreateUserRequest) (*v1.CreateUserResponse, error) {
 	var user models.User
 
 	userGrpcToModels(req.User, &user, false)
@@ -24,7 +24,7 @@ func (server *UsermanServer) CreateUser(ctx context.Context, req *v1.CreateUserR
 	}, nil
 }
 
-func (server *UsermanServer) ReadUesr(ctx context.Context, req *v1.ReadUserRequest) (*v1.ReadUserResponse, error) {
+func (server UsermanServer) ReadUser(ctx context.Context, req *v1.ReadUserRequest) (*v1.ReadUserResponse, error) {
 	var user models.User
 	if err := server.DB.First(&user, req.Uid).Error; err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to get user with this id(%d) with error %v", req.Uid, err)
@@ -36,7 +36,7 @@ func (server *UsermanServer) ReadUesr(ctx context.Context, req *v1.ReadUserReque
 	}, nil
 }
 
-func (server *UsermanServer) UpdateUser(ctx context.Context, req *v1.UpdateUserRequest) (*v1.UpdateUserResponse, error) {
+func (server UsermanServer) UpdateUser(ctx context.Context, req *v1.UpdateUserRequest) (*v1.UpdateUserResponse, error) {
 	var user models.User
 
 	if err := server.DB.First(&user, req.User.Id).Error; err != nil {
@@ -55,7 +55,7 @@ func (server *UsermanServer) UpdateUser(ctx context.Context, req *v1.UpdateUserR
 	}, nil
 }
 
-func (server *UsermanServer) DeleteUser(ctx context.Context, req *v1.DeleteUserRequest) (*v1.DeleteUserResponse, error) {
+func (server UsermanServer) DeleteUser(ctx context.Context, req *v1.DeleteUserRequest) (*v1.DeleteUserResponse, error) {
 	var user models.User
 	if err := server.DB.First(&user, req.Uid).Error; err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to get user with this id(%d) with error %v", req.Uid, err)

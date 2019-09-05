@@ -1,14 +1,14 @@
 package v1
 
 import (
-	"../../api/v1"
 	"google.golang.org/grpc/codes"
 	"context"
-	"../../../models"
 	"google.golang.org/grpc/status"
+	"github.com/c-beel/userman/src/models"
+	"github.com/c-beel/userman/src/pkg/api/v1"
 )
 
-func (server *UsermanServer) CreateGroup(ctx context.Context, req *v1.CreateGroupRequest) (*v1.CreateGroupResponse, error) {
+func (server UsermanServer) CreateGroup(ctx context.Context, req *v1.CreateGroupRequest) (*v1.CreateGroupResponse, error) {
 	var group models.Group
 
 	groupGrpcToModels(req.Group, &group)
@@ -23,7 +23,7 @@ func (server *UsermanServer) CreateGroup(ctx context.Context, req *v1.CreateGrou
 	}, nil
 }
 
-func (server *UsermanServer) ReadGroupList(ctx context.Context, req *v1.ReadGroupListRequest) (*v1.ReadGroupListResponse, error) {
+func (server UsermanServer) ReadGroupList(ctx context.Context, req *v1.ReadGroupListRequest) (*v1.ReadGroupListResponse, error) {
 	var groupList []models.Group
 	if err := server.DB.Find(&groupList).Error; err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to get groups with error %v", err)
@@ -35,7 +35,7 @@ func (server *UsermanServer) ReadGroupList(ctx context.Context, req *v1.ReadGrou
 	}, nil
 }
 
-func (server *UsermanServer) DeleteGroup(ctx context.Context, req *v1.DeleteGroupRequest) (*v1.DeleteGroupResponse, error) {
+func (server UsermanServer) DeleteGroup(ctx context.Context, req *v1.DeleteGroupRequest) (*v1.DeleteGroupResponse, error) {
 	var group models.Group
 	if err := server.DB.Where(&models.Group{Name: req.Group.Name}).First(&group).Error; err != nil {
 		return nil, status.Errorf(codes.NotFound, "failed to get group with this name(%s) with error %v", req.Group.Name, err)
