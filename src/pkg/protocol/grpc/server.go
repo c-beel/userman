@@ -10,7 +10,7 @@ import (
 	"github.com/c-beel/userman/src/pkg/api/v1"
 )
 
-func RunServer(ctx context.Context, v1API v1.UsermanServiceServer, port string) error {
+func RunServer(ctx context.Context, v1API *v1.UsermanServiceServer, port string) error {
 	listen, err := net.Listen("tcp", ":"+port)
 	if err != nil {
 		return err
