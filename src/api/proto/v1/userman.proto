@@ -22,11 +22,8 @@ message User {
 }
 
 message Group {
-    // Unique integer assigned to each group
-    int64 id = 1;
-
     // The name of the group
-    string name = 2;
+    string name = 1;
 }
 
 message CreateUserRequest {
@@ -77,7 +74,7 @@ message ReadGroupListResponse {
 }
 
 message DeleteGroupRequest {
-    int64 gid = 1;
+    Group group = 1;
 }
 
 message DeleteGroupResponse {

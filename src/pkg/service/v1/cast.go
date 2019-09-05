@@ -26,3 +26,11 @@ func userModelsToGrpc(modelUser *models.User, grpcUser *v1.User, includeId bool)
 	grpcUser.FirstName = modelUser.FirstName
 	grpcUser.LastName = modelUser.LastName
 }
+
+func groupGrpcToModels(grpcGroup *v1.Group, modelGroup *models.Group) {
+	modelGroup.Name = grpcGroup.Name
+}
+
+func groupModelsToGrpc(modelGroup *models.Group, grpcGroup *v1.Group) {
+	grpcGroup.Name = modelGroup.Name
+}
