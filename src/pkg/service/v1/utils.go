@@ -6,16 +6,15 @@ import (
 	"google.golang.org/api/oauth2/v2"
 	"github.com/jinzhu/gorm"
 	"github.com/c-beel/userman/src/models"
-	"fmt"
 	"github.com/c-beel/userman/src/configman"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/qor/validations"
 	"errors"
 )
 
 func NewUsermanServer(cfg *configman.MainConfig) (*UsermanServer, error) {
-	dbUri := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s",
-		cfg.DBConfig.Address, cfg.DBConfig.Port, cfg.DBConfig.Username, cfg.DBConfig.Database, cfg.DBConfig.Password)
+	dbUri := cfg.DBConfig.GetDBUri()
 	db, err := gorm.Open(cfg.DBConfig.Type, dbUri)
 	validations.RegisterCallbacks(db)
 	if err != nil {
