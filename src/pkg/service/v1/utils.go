@@ -14,7 +14,6 @@ import (
 func NewUsermanServer(cfg *configman.MainConfig) (*UsermanServer, error) {
 	dbUri := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s",
 		cfg.DBConfig.Address, cfg.DBConfig.Port, cfg.DBConfig.Username, cfg.DBConfig.Database, cfg.DBConfig.Password)
-	fmt.Println(cfg.DBConfig.Port)
 	db, err := gorm.Open(cfg.DBConfig.Type, dbUri)
 	if err != nil {
 		return nil, err

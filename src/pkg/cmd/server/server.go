@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"github.com/c-beel/userman/src/pkg/service/v1"
 	"github.com/c-beel/userman/src/pkg/protocol/grpc"
 	"github.com/c-beel/userman/src/configman"
@@ -26,13 +25,14 @@ func RunServer() error {
 
 	v1API, err := v1.NewUsermanServer(cfg)
 	if err != nil {
-		return fmt.Errorf("failed to start service : %v", err)
+		log.Fatalf("failed to start service : %v", err)
 	}
 	if *autoMigrate {
+		log.Println("Starting auto migrate...")
 		if err := v1API.AutoMigrate(); err != nil {
-			return fmt.Errorf("failed to auto migrate : %v", err)
+			log.Fatalf("failed to auto migrate : %v", err)
 		}
+		log.Println("Auto migrate done.")
 	}
-	fmt.Println("salaaaaam :D")
 	return grpc.RunServer(ctx, *v1API, cfg.ListenPort)
 }

@@ -8,11 +8,9 @@ import (
 	"log"
 	"google.golang.org/grpc"
 	"github.com/c-beel/userman/src/pkg/api/v1"
-	"fmt"
 )
 
 func RunServer(ctx context.Context, v1API v1.UsermanServiceServer, port string) error {
-	fmt.Println(":" + port)
 	listen, err := net.Listen("tcp", ":"+port)
 	if err != nil {
 		return err
@@ -37,6 +35,6 @@ func RunServer(ctx context.Context, v1API v1.UsermanServiceServer, port string) 
 	}()
 
 	// start gRPC server
-	log.Println("starting gRPC server...")
+	log.Println("Starting gRPC server...")
 	return server.Serve(listen)
 }
