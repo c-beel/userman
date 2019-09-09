@@ -3,16 +3,12 @@ package v1
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-)
-
-const (
-	// apiVersion is version of API provided by server
-	apiVersion = "v1"
+	"github.com/c-beel/userman/src/configman"
 )
 
 type UsermanServer struct {
-	DB                *gorm.DB
-	GoogleOAuthAPIKey string
+	DB           *gorm.DB
+	GOAuthConfig configman.GoogleOAuthConfig
 }
 
 /*

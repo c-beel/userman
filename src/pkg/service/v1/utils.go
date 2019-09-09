@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"github.com/c-beel/userman/src/configman"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"errors"
 )
 
 func NewUsermanServer(cfg *configman.MainConfig) (*UsermanServer, error) {
@@ -19,8 +20,8 @@ func NewUsermanServer(cfg *configman.MainConfig) (*UsermanServer, error) {
 		return nil, err
 	}
 	return &UsermanServer{
-		DB:                db,
-		GoogleOAuthAPIKey: cfg.GoogleOAuthAPIKey,
+		DB:           db,
+		GOAuthConfig: cfg.GOAuthConfig,
 	}, nil
 }
 
@@ -39,7 +40,7 @@ func (server *UsermanServer) AutoMigrate() (err error) {
 
 func (server *UsermanServer) getEmailByIdToken(idToken string) (string, error) {
 	ctx := context.Background()
-	oauth2Service, err := oauth2.NewService(ctx, option.WithAPIKey(server.GoogleOAuthAPIKey))
+	oauth2Service, err := oauth2.NewService(ctx, option.WithAPIKey(server.GOAuthConfig.APIKey))
 	if err != nil {
 		return "", err
 	}
@@ -48,22 +49,12 @@ func (server *UsermanServer) getEmailByIdToken(idToken string) (string, error) {
 	tokenInfo, err := tokenInfoCall.Do()
 	if err != nil {
 		return "", err
+	}
+	if tokenInfo.Audience != server.GOAuthConfig.Issuer {
+		return "", errors.New("invalid audience")
+	}
+	if !tokenInfo.VerifiedEmail {
+		return "", errors.New("non verified email")
 	}
 	return tokenInfo.Email, nil
-}
-
-func (server *UsermanServer) isAuthenticated(idToken string) bool {
-	ctx := context.Background()
-	oauth2Service, err := oauth2.NewService(ctx, option.WithAPIKey(server.GoogleOAuthAPIKey))
-	if err != nil {
-		return false
-	}
-	tokenInfoCall := oauth2Service.Tokeninfo()
-	tokenInfoCall.IdToken(idToken)
-	tokenInfo, err := tokenInfoCall.Do()
-	if err != nil {
-		return false
-	}
-	fmt.Println(tokenInfo.Email, tokenInfo.VerifiedEmail)
-	return tokenInfo.VerifiedEmail
 }
