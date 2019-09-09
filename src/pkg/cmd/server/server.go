@@ -15,6 +15,7 @@ func RunServer() error {
 	ctx := context.Background()
 
 	configFileAddress := flag.String("conf", "config.yaml", "The path to the service config file")
+	autoMigrate := flag.Bool("migrate", true, "Auto-migrate models")
 	flag.Parse()
 
 	// get configuration
@@ -27,8 +28,10 @@ func RunServer() error {
 	if err != nil {
 		return fmt.Errorf("failed to start service : %v", err)
 	}
-	if err := v1API.AutoMigrate(); err != nil {
-		return fmt.Errorf("failed to auto migrate : %v", err)
+	if *autoMigrate {
+		if err := v1API.AutoMigrate(); err != nil {
+			return fmt.Errorf("failed to auto migrate : %v", err)
+		}
 	}
 	fmt.Println("salaaaaam :D")
 	return grpc.RunServer(ctx, *v1API, cfg.ListenPort)
