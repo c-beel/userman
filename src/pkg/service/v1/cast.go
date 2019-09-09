@@ -44,7 +44,7 @@ func groupListModelsToGrpc(modelGroups *[]models.Group, grpcGroups *[]*v1.Group)
 	}
 }
 
-func groupListGrpctoModels(grpcGroups *[]*v1.Group, modelGroups *[]models.Group) {
+func groupListGrpcToModels(grpcGroups *[]*v1.Group, modelGroups *[]models.Group) {
 	*modelGroups = make([]models.Group, len(*grpcGroups))
 	for index, group := range *grpcGroups {
 		var appendingGroup models.Group
