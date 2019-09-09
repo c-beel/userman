@@ -35,6 +35,6 @@ func RunServer(ctx context.Context, v1API v1.UsermanServiceServer, port string) 
 	}()
 
 	// start gRPC server
-	log.Println("starting gRPC server...")
+	log.Println("Starting gRPC server...")
 	return server.Serve(listen)
 }

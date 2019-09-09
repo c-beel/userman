@@ -8,82 +8,152 @@ message User {
     // Unique string for each user
     string username = 2;
 
+    // Nickname
+    string nickname = 3;
+
     // Email address
-    string email = 3;
+    string email = 4;
 
     // First name
-    string firstName = 4;
+    string firstName = 5;
 
     // Last Name
-    string lastName = 5;
+    string lastName = 6;
 }
 
 message Group {
-    // Unique integer assigned to each group
-    int64 id = 1;
-
     // The name of the group
-    string name = 2;
+    string name = 1;
 }
 
-message Membership {
-    // Unique integer assigned to each membership
-    int64 id = 1;
-
-    // ID of user
-    int64 uid = 2;
-
-    // ID of group
-    int64 gid = 3;
+message CreateUserRequest {
+    User user = 1;
 }
 
-// Request data to update a user
+message CreateUserResponse {
+    User user = 1;
+}
+
+message ReadUserRequest {
+    int64 uid = 1;
+}
+
+message ReadUserResponse {
+    User user = 1;
+}
+
 message UpdateUserRequest {
-    // API versioning
-    string api = 1;
-
-    // User entity to add
-    User user = 2;
-
-    // Google id token
-    string id_token = 3;
+    User user = 1;
 }
 
-// Response that contains data for updated user
 message UpdateUserResponse {
-    // API versioning
-    string api = 1;
-
-    // ID of updated user
-    int64 id = 2;
+    User user = 1;
 }
 
-// Request data to create new user
-message GetUserByIdRequest {
-    // API versioning
-    string api = 1;
-
-    // Id of requested user
-    int64 id = 2;
-
-    // Google id token
-    string id_token = 3;
+message DeleteUserRequest {
+    int64 uid = 1;
 }
 
-// Response that contains data for created user
-message GetUserByIdResponse {
-    // API versioning
-    string api = 1;
+message DeleteUserResponse {
+    User user = 1;
+}
 
-    // Requested user
-    User user = 2;
+message CreateGroupRequest {
+    Group group = 1;
+}
+
+message CreateGroupResponse {
+    Group group = 1;
+}
+
+message ReadGroupListRequest {
+}
+
+message ReadGroupListResponse {
+    repeated Group groups = 1;
+}
+
+message DeleteGroupRequest {
+    Group group = 1;
+}
+
+message DeleteGroupResponse {
+    Group group = 1;
+}
+
+message AddUserToGroupRequest {
+    int64 uid = 1;
+    repeated Group groups = 2;
+}
+
+message AddUserToGroupResponse {
+}
+
+message RemoveUserFromGroupRequest {
+    int64 uid = 1;
+    repeated Group groups = 2;
+}
+
+message RemoveUserFromGroupResponse {
+}
+
+message SetUserGroupsRequest {
+    int64 uid = 1;
+    repeated Group groups = 2;
+}
+
+message SetUserGroupsResponse {
+}
+
+message GetUserGroupsListRequest {
+    int64 uid = 1;
+}
+
+message GetUserGroupsListResponse {
+    repeated Group groups = 1;
+}
+
+message IsMemberOfRequest {
+    int64 uid = 1;
+    Group group = 2;
+}
+
+message IsMemberOfResponse {
+    bool yes = 1;
+}
+
+message GetOrCreateUserByIdTokenRequest {
+    string idToken = 1;
+}
+
+message GetOrCreateUserByIdTokenResponse {
+    User user = 1;
+    bool newUser = 2;
 }
 
 // Service to manage list of users and groups
 service UsermanService {
-    // Update (or create) a user
+    // CRUD User
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+    rpc ReadUser (ReadUserRequest) returns (ReadUserResponse);
     rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+    rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
 
-    // Get a user by id
-    rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
+    // CRD Group
+    rpc CreateGroup (CreateGroupRequest) returns (CreateGroupResponse);
+    rpc ReadGroupList (ReadGroupListRequest) returns (ReadGroupListResponse);
+    rpc DeleteGroup (DeleteGroupRequest) returns (DeleteGroupResponse);
+
+    // Membership handling
+    rpc AddUserToGroup (AddUserToGroupRequest) returns (AddUserToGroupResponse);
+    rpc RemoveUserFromGroup (RemoveUserFromGroupRequest) returns (RemoveUserFromGroupResponse);
+    rpc IsMemberOf (IsMemberOfRequest) returns (IsMemberOfResponse);
+    rpc SetUserGroups (SetUserGroupsRequest) returns (SetUserGroupsResponse);
+
+    // Get a user's groups
+    rpc GetUserGroupsList (GetUserGroupsListRequest) returns (GetUserGroupsListResponse);
+
+    // OAuth Part
+    rpc GetOrCreateUserByIdToken (GetOrCreateUserByIdTokenRequest) returns (GetOrCreateUserByIdTokenResponse);
+
 }

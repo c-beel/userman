@@ -1,0 +1,11 @@
+port: "8000"
+google-oauth:
+  api-key: "google-oauth-api-key"
+  issuer: "issuer"
+database:
+  type: "postgres"
+  address: "localhost"
+  port: "5432"
+  username: "usermanuser"
+  password: "usermanpassword"
+  db: "usermandb"

@@ -5,21 +5,24 @@ import (
 	"context"
 	"google.golang.org/api/oauth2/v2"
 	"github.com/jinzhu/gorm"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"github.com/c-beel/userman/src/models"
-	"fmt"
 	"github.com/c-beel/userman/src/configman"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/qor/validations"
+	"errors"
 )
 
-func NewUsermanServer(config configman.Config) (*UsermanServer, error) {
-	db, err := gorm.Open("sqlite3", config.DBAddress)
+func NewUsermanServer(cfg *configman.MainConfig) (*UsermanServer, error) {
+	dbUri := cfg.DBConfig.GetDBUri()
+	db, err := gorm.Open(cfg.DBConfig.Type, dbUri)
+	validations.RegisterCallbacks(db)
 	if err != nil {
 		return nil, err
 	}
 	return &UsermanServer{
-		DB:                db,
-		GoogleOAuthAPIKey: config.GoogleOAuthAPIKey,
+		DB:           db,
+		GOAuthConfig: cfg.GOAuthConfig,
 	}, nil
 }
 
@@ -36,20 +39,9 @@ func (server *UsermanServer) AutoMigrate() (err error) {
 	return nil
 }
 
-func (server *UsermanServer) checkAPI(api string) error {
-	// API version is "" means use current version of the service
-	if len(api) > 0 {
-		if apiVersion != api {
-			return status.Errorf(codes.Unimplemented,
-				"unsupported API version: service implements API version '%s', but asked for '%s'", apiVersion, api)
-		}
-	}
-	return nil
-}
-
 func (server *UsermanServer) getEmailByIdToken(idToken string) (string, error) {
 	ctx := context.Background()
-	oauth2Service, err := oauth2.NewService(ctx, option.WithAPIKey(server.GoogleOAuthAPIKey))
+	oauth2Service, err := oauth2.NewService(ctx, option.WithAPIKey(server.GOAuthConfig.APIKey))
 	if err != nil {
 		return "", err
 	}
@@ -58,22 +50,12 @@ func (server *UsermanServer) getEmailByIdToken(idToken string) (string, error) {
 	tokenInfo, err := tokenInfoCall.Do()
 	if err != nil {
 		return "", err
+	}
+	if tokenInfo.Audience != server.GOAuthConfig.Issuer {
+		return "", errors.New("invalid audience")
+	}
+	if !tokenInfo.VerifiedEmail {
+		return "", errors.New("non verified email")
 	}
 	return tokenInfo.Email, nil
-}
-
-func (server *UsermanServer) isAuthenticated(idToken string) bool {
-	ctx := context.Background()
-	oauth2Service, err := oauth2.NewService(ctx, option.WithAPIKey(server.GoogleOAuthAPIKey))
-	if err != nil {
-		return false
-	}
-	tokenInfoCall := oauth2Service.Tokeninfo()
-	tokenInfoCall.IdToken(idToken)
-	tokenInfo, err := tokenInfoCall.Do()
-	if err != nil {
-		return false
-	}
-	fmt.Println(tokenInfo.Email, tokenInfo.VerifiedEmail)
-	return tokenInfo.VerifiedEmail
 }
