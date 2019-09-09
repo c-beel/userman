@@ -9,14 +9,9 @@ import (
 	"github.com/c-beel/userman/src/pkg/api/v1"
 )
 
-const (
-	// apiVersion is version of API is provided by server
-	apiVersion = "v1"
-)
-
 func main() {
 	// get configuration
-	address := flag.String("server", "localhost:8080", "gRPC server in format host:port")
+	address := flag.String("server", "localhost:8000", "gRPC server in format host:port")
 	flag.Parse()
 
 	// Set up a connection to the server.
@@ -31,38 +26,35 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 
-	req2 := v1.GetUserByIdRequest{
-		Api:     apiVersion,
-		Id:      1,
-		IdToken: "..-----",
+	req2 := v1.ReadUserRequest{
+		Uid: 1,
 	}
 
-	req := v1.UpdateUserRequest{
-		Api: apiVersion,
+	req := v1.CreateUserRequest{
 		User: &v1.User{
-			Username:  "ex@mple",
-			FirstName: "example",
-			LastName:  "exam",
-			Email:     "example@example.com",
+			Username:  "example",
+			Nickname:  "Example",
+			FirstName: "exam",
+			LastName:  "ple",
+			Email:     "example@google.com",
 		},
-		IdToken: "..-----",
 	}
 
-	res2, err := c.GetUserById(ctx, &req2)
+	res2, err := c.ReadUser(ctx, &req2)
 	if err != nil {
-		log.Fatalf("Get failed: %v", err)
+		log.Println("Get failed: %v", err)
 	}
 	log.Printf("Get result: <%+v>\n\n", res2)
 
-	res, err := c.UpdateUser(ctx, &req)
+	res, err := c.CreateUser(ctx, &req)
 	if err != nil {
-		log.Fatalf("Create failed: %v", err)
+		log.Println("Create failed: %v", err)
 	}
 	log.Printf("Create result: <%+v>\n\n", res)
 
-	res2, err = c.GetUserById(ctx, &req2)
+	res2, err = c.ReadUser(ctx, &req2)
 	if err != nil {
-		log.Fatalf("Get failed: %v", err)
+		log.Println("Get failed: %v", err)
 	}
 	log.Printf("Get result: <%+v>\n\n", res2)
 }
