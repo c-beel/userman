@@ -1,5 +1,7 @@
 port: "8000"
-google-oauth-api-key: "google-oauth-api-key"
+google-oauth:
+  api-key: "google-oauth-api-key"
+  issuer: "issuer"
 database:
   type: "postgres"
   address: "localhost"

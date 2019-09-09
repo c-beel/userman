@@ -7,7 +7,7 @@ import (
 
 type MainConfig struct {
 	DBConfig          DatabaseConfig `yaml:"database"`
-	GoogleOAuthAPIKey string         `yaml:"google-oauth-api-key"`
+	GOAuthConfig      GoogleOAuthConfig `yaml:"google-oauth"`
 	ListenPort        string         `yaml:"port"`
 }
 
