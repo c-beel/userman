@@ -2,9 +2,6 @@ syntax = "proto3";
 package v1;
 
 message User {
-    // Unique integer assigned to each user
-    int64 id = 1;
-
     // Unique string for each user
     string username = 2;
 
@@ -35,7 +32,7 @@ message CreateUserResponse {
 }
 
 message ReadUserRequest {
-    int64 uid = 1;
+    string username = 1;
 }
 
 message ReadUserResponse {
@@ -51,7 +48,7 @@ message UpdateUserResponse {
 }
 
 message DeleteUserRequest {
-    int64 uid = 1;
+    string username = 1;
 }
 
 message DeleteUserResponse {
@@ -82,7 +79,7 @@ message DeleteGroupResponse {
 }
 
 message AddUserToGroupRequest {
-    int64 uid = 1;
+    string username = 1;
     repeated Group groups = 2;
 }
 
@@ -90,7 +87,7 @@ message AddUserToGroupResponse {
 }
 
 message RemoveUserFromGroupRequest {
-    int64 uid = 1;
+    string username = 1;
     repeated Group groups = 2;
 }
 
@@ -98,7 +95,7 @@ message RemoveUserFromGroupResponse {
 }
 
 message SetUserGroupsRequest {
-    int64 uid = 1;
+    string username = 1;
     repeated Group groups = 2;
 }
 
@@ -106,7 +103,7 @@ message SetUserGroupsResponse {
 }
 
 message GetUserGroupsListRequest {
-    int64 uid = 1;
+    string username = 1;
 }
 
 message GetUserGroupsListResponse {
@@ -114,7 +111,7 @@ message GetUserGroupsListResponse {
 }
 
 message IsMemberOfRequest {
-    int64 uid = 1;
+    string username = 1;
     Group group = 2;
 }
 
