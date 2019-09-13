@@ -26,7 +26,7 @@ func (server UsermanServer) GetOrCreateUserByIdToken(ctx context.Context, req *v
 	}
 	if userFound {
 		var responseUser v1.User
-		userModelsToGrpc(&user, &responseUser, true)
+		userModelsToGrpc(&user, &responseUser)
 		return &v1.GetOrCreateUserByIdTokenResponse{
 			User:    &responseUser,
 			NewUser: false,
@@ -39,7 +39,7 @@ func (server UsermanServer) GetOrCreateUserByIdToken(ctx context.Context, req *v
 		return nil, status.Errorf(codes.Unknown, "Failed to create user with email(%s) with error %v", email, err)
 	}
 	var responseUser v1.User
-	userModelsToGrpc(&user, &responseUser, true)
+	userModelsToGrpc(&user, &responseUser)
 	return &v1.GetOrCreateUserByIdTokenResponse{
 		User:    &responseUser,
 		NewUser: true,

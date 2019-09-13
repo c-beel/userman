@@ -5,10 +5,7 @@ import (
 	"github.com/c-beel/userman/src/models"
 )
 
-func userGrpcToModels(grpcUser *v1.User, modelUser *models.User, includeId bool) {
-	if includeId {
-		modelUser.ID = uint(grpcUser.Id)
-	}
+func userGrpcToModels(grpcUser *v1.User, modelUser *models.User) {
 	modelUser.Username = grpcUser.Username
 	modelUser.Nickname = grpcUser.Nickname
 	modelUser.Email = grpcUser.Email
@@ -16,10 +13,7 @@ func userGrpcToModels(grpcUser *v1.User, modelUser *models.User, includeId bool)
 	modelUser.LastName = grpcUser.LastName
 }
 
-func userModelsToGrpc(modelUser *models.User, grpcUser *v1.User, includeId bool) {
-	if includeId {
-		grpcUser.Id = int64(modelUser.ID)
-	}
+func userModelsToGrpc(modelUser *models.User, grpcUser *v1.User) {
 	grpcUser.Username = modelUser.Username
 	grpcUser.Nickname = modelUser.Nickname
 	grpcUser.Email = modelUser.Email
@@ -44,7 +38,8 @@ func groupListModelsToGrpc(modelGroups *[]models.Group, grpcGroups *[]*v1.Group)
 	}
 }
 
-func groupListGrpcToModels(grpcGroups *[]*v1.Group, modelGroups *[]models.Group) {
+//func groupListGrpcToModels(grpcGroups *[]*v1.Group, modelGroups *[]models.Group) {
+func _(grpcGroups *[]*v1.Group, modelGroups *[]models.Group) {
 	*modelGroups = make([]models.Group, len(*grpcGroups))
 	for index, group := range *grpcGroups {
 		var appendingGroup models.Group
